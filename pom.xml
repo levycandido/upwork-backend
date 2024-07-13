@@ -8,8 +8,8 @@
         <version>3.3.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.hostfully</groupId>
-    <artifactId>hostfullyChallenge</artifactId>
+    <groupId>com.upwork</groupId>
+    <artifactId>upworkChallenge</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>hostfullyChallenge</name>
     <description>Demo project for Spring Boot</description>
