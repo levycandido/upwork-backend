@@ -1,7 +1,9 @@
 package com.upwork.service;
 
+import com.upwork.ObjectMapperUtils;
 import com.upwork.entity.Url;
 import com.upwork.repository.ShortUrlRepository;
+import com.upwork.service.dao.UrlDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +23,21 @@ public class UrlShortenerService {
 
     /**
      * Shortens a given URL and saves it in the repository.
-     * @param url the original URL to shorten.
+     *
+     * @param urlDTO the original URL to shorten.
      * @return the shortened URL.
      */
-    public Url shortenUrl(Url url) {
+    public UrlDTO shortenUrl(UrlDTO urlDTO) {
+        Url url = ObjectMapperUtils.map(urlDTO, Url.class);
         String shortUrl = generateShortUrl();
-        url.setOriginalUrl(url.getOriginalUrl());
-        url.setShortUrl(shortUrl);
-        return shortUrlRepository.save(url);
+        urlDTO.setOriginalUrl(url.getOriginalUrl());
+        urlDTO.setShortUrl(shortUrl);
+        return ObjectMapperUtils.map(shortUrlRepository.save(url), UrlDTO.class);
     }
 
     /**
      * Retrieves the original URL for a given shortened URL.
+     *
      * @param shortUrl the shortened URL.
      * @return an optional containing the original URL if found, or empty if not found or expired.
      */
@@ -55,6 +60,7 @@ public class UrlShortenerService {
 
     /**
      * Deletes a URL.
+     *
      * @param id the ID of the URL to delete.
      * @return true if the URL was deleted, false if not found.
      */
@@ -67,6 +73,7 @@ public class UrlShortenerService {
 
     /**
      * Deletes URLs that have not been accessed before the given threshold date.
+     *
      * @param threshold the date threshold for deletion.
      */
     public void deleteExpiredUrls(LocalDateTime threshold) {
@@ -77,6 +84,7 @@ public class UrlShortenerService {
 
     /**
      * Generates a random short URL.
+     *
      * @return the generated short URL.
      */
     protected String generateShortUrl() {
@@ -85,24 +93,32 @@ public class UrlShortenerService {
 
     /**
      * Retrieves all URLs.
+     *
      * @return a list of all URLs.
      */
-    public List<Url> getAllUrls() {
-        return shortUrlRepository.findAll();
+    public List<UrlDTO> getAllUrls() {
+        return ObjectMapperUtils.mapAll(shortUrlRepository.findAll(), UrlDTO.class);
     }
 
     /**
      * Updates a URL.
-     * @param id the ID of the URL to update.
+     *
+     * @param id         the ID of the URL to update.
      * @param updatedUrl the updated URL details.
      * @return an optional containing the updated URL if successful, or empty if not found.
      */
-    public Optional<Url> updateUrl(Long id, Url updatedUrl) {
-        return shortUrlRepository.findById(id).map(url -> {
+    public Optional<UrlDTO> updateUrl(Long id, UrlDTO updatedUrl) {
+
+
+        Optional<Url> urlOptional = shortUrlRepository.findById(id).map(url -> {
             url.setOriginalUrl(updatedUrl.getOriginalUrl());
             url.setShortUrl(updatedUrl.getShortUrl());
             url.setExpiryDate(updatedUrl.getExpiryDate());
             return shortUrlRepository.save(url);
         });
+
+        return urlOptional
+                .map(url -> Optional.ofNullable(ObjectMapperUtils.map(url, UrlDTO.class)))
+                .orElse(null);
     }
 }

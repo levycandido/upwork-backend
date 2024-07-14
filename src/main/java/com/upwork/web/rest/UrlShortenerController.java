@@ -2,6 +2,7 @@ package com.upwork.web.rest;
 
 import com.upwork.entity.Url;
 import com.upwork.service.UrlShortenerService;
+import com.upwork.service.dao.UrlDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class UrlShortenerController {
      */
     @GetMapping()
     @Operation(summary = "Get all URLs", description = "Retrieves a list of all URLs")
-    public ResponseEntity<List<Url>> getUrls() {
-        List<Url> urls = urlShortenerService.getAllUrls();
+    public ResponseEntity<List<UrlDTO>> getUrls() {
+        List<UrlDTO> urls = urlShortenerService.getAllUrls();
         return ResponseEntity.ok(urls);
     }
 
@@ -42,21 +43,23 @@ public class UrlShortenerController {
      */
     @PostMapping("/shorter")
     @Operation(summary = "Shorten a URL", description = "Generates a short URL for the given original URL")
-    public ResponseEntity<Url> shortenUrl(@RequestBody Url originalUrl) {
-        Url shortUrl = urlShortenerService.shortenUrl(originalUrl);
-        return ResponseEntity.created(URI.create(shortUrl.getShortUrl())).body(shortUrl);
+    public ResponseEntity<UrlDTO> shortenUrl(@RequestBody UrlDTO originalUrl) {
+        UrlDTO shortUrl = urlShortenerService.shortenUrl(originalUrl);
+        return ResponseEntity.created(URI.create(shortUrl.getShortUrl()))
+                .body(shortUrl);
     }
 
     /**
      * Updates a URL.
-     * @param id the ID of the URL to update.
-     * @param url the updated URL details.
+     *
+     * @param id  the ID of the URL to update.
+     * @param urlDTO the updated URL details.
      * @return the updated URL.
      */
     @PutMapping("/{id}")
     @Operation(summary = "Update a URL", description = "Updates the details of an existing URL")
-    public ResponseEntity<Url> updateUrl(@PathVariable Long id, @RequestBody Url url) {
-        Optional<Url> updatedUrl = urlShortenerService.updateUrl(id, url);
+    public ResponseEntity<UrlDTO> updateUrl(@PathVariable Long id, @RequestBody UrlDTO urlDTO) {
+        Optional<UrlDTO> updatedUrl = urlShortenerService.updateUrl(id, urlDTO);
         return updatedUrl.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
