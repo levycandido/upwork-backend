@@ -42,7 +42,6 @@ public class UrlShortenerServiceTest {
         url.setOriginalUrl(originalUrl);
         url.setShortUrl(shortUrl);
 
-        // Mocking the repository methods
         when(shortUrlRepository.save(any(Url.class))).thenReturn(url);
         when(shortUrlRepository.findByShortUrl(anyString())).thenReturn(Optional.of(url));
         doReturn(shortUrl).when(urlShortenerService).generateShortUrl(); // Mock generateShortUrl

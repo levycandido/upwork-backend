@@ -116,7 +116,6 @@ public class UrlShortenerService {
             url.setExpiryDate(updatedUrl.getExpiryDate());
             return shortUrlRepository.save(url);
         });
-
         return urlOptional
                 .map(url -> Optional.ofNullable(ObjectMapperUtils.map(url, UrlDTO.class)))
                 .orElse(null);

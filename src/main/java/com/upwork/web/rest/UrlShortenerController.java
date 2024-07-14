@@ -80,6 +80,7 @@ public class UrlShortenerController {
      * @param shortUrl the shortened URL.
      * @return the original URL if found, or 404 status if not found.
      */
+
     @GetMapping("/{shortUrl}")
     @Operation(summary = "Get original URL", description = "Retrieves the original URL for the given short URL")
     public ResponseEntity<String> getOriginalUrl(@PathVariable String shortUrl) {
