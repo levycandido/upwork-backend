@@ -36,6 +36,8 @@ public class WebSecurityConfiguration {
                         "/login",
                         "/v1/persons",
                         "/api/{shortUrl}",
+                        "/api/shorter",
+                        "/api",
                         "/swagger-ui/",
                         "/swagger-ui/**",
                         "/v2/api-docs",
@@ -43,7 +45,7 @@ public class WebSecurityConfiguration {
                         "/webjars/**",
                         "/h2-console/**").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/v1/**")
+                .authorizeHttpRequests().requestMatchers("/api/**")
                 .authenticated()
                 .and()
                 .sessionManagement()
